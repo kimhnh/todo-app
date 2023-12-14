@@ -6,6 +6,7 @@
 
 html {
   font-family: sans-serif;
+  background-color: #212529;
 }
 
 body {
@@ -15,7 +16,9 @@ body {
   align-items: center;
 }
 
-header {
+header,
+footer {
+  color: white;
   text-align: center;
 }
 
@@ -45,4 +48,9 @@ li {
   font-style: italic;
   font-weight: bold;
   color: rgb(87, 216, 205);
+}
+
+button {
+  margin: 5px 2px;
+  padding: 0 5px;
 }
