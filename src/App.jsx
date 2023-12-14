@@ -1,10 +1,16 @@
 import { useState } from 'react';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
+import TodoItem from './components/TodoItem';
+import { NotesForm, NoteList } from './NotesForm'; // WIP
 
 // Dummy TODO List
 const todoList = [
-  { id: 1, todo: 'wash dishes', status: false },
-  { id: 2, todo: 'go to the bank', status: false },
-  { id: 3, todo: 'clean bathroom', status: false },
+  { id: 1, todo: 'water plants', status: false },
+  { id: 2, todo: 'make coffee', status: false },
+  { id: 3, todo: 'buy ingredients for dinner', status: false },
 ];
 
 // Dummy Notes List
@@ -18,24 +24,38 @@ const notesList = [
 ];
 
 export default function App() {
-  const [list, setList] = useState(todoList);
-  const [toggleStatus, setToggleStatus] = useState(null);
+  const [list, setList] = useState(todoList); // notes array
+  const [workingItem, setWorkingItem] = useState(null); // select working-on item
+  const [editItem, setEditItem] = useState(null); // select editing item
 
-  // Add new item (obj) to array via spread
+  // Form Handler Functions
+  // [UPDATE_ ARRAY] :: SPREAD
   function handleAddItem(item) {
     setList((list) => [...list, item]);
   }
 
-  // Update via map + spread
-  function handleToggle(item) {
-    setList((list) => list.map((i) => (i.id === item.id ? { ...i, status: !i.status } : i)));
-    setToggleStatus((s) => (s?.id === item.id ? null : item));
+  // [UPDATE_ ITEM (TODO)] :: MAP + SPREAD
+  function handleUpdateItem(editTodo) {
+    setList((list) => list.map((i) => (i.id === editItem.id ? { ...i, todo: editTodo } : i)));
   }
 
-  // Delete via filter
+  // Button Handler Functions
+  // [UPDATE_ ITEM (STATUS)] :: MAP + SREAD
+  function handleWorkingItem(item) {
+    setList((list) => list.map((i) => (i.id === item.id ? { ...i, status: !i.status } : i)));
+    setWorkingItem((s) => (s?.id === item.id ? null : item));
+  }
+
+  // [UPDATE_ ITEM] :: SELECT ITEM TO UPDATE
+  function handleEditInput(item) {
+    // setShowInput((s) => !s);
+    setEditItem((e) => (e?.id === item.id ? null : item));
+  }
+
+  // [DELETE_ ITEM] :: FILTER
   function handleDeleteItem(item) {
     setList((list) => list.filter((i) => item.id !== i.id));
-    setToggleStatus((s) => s.id === item.id && null);
+    setWorkingItem((s) => s?.id === item.id && null);
   }
 
   return (
@@ -46,9 +66,12 @@ export default function App() {
           <TodoForm onAddItem={handleAddItem} />
           <TodoList
             todos={list}
-            onToggleStatus={handleToggle}
+            workingItem={workingItem}
+            editItem={editItem}
+            onWorkingItem={handleWorkingItem}
             onDeleteItem={handleDeleteItem}
-            toggleStatus={toggleStatus}
+            onEditInput={handleEditInput}
+            onUpdateItem={handleUpdateItem}
           />
         </div>
         <div className="notes">
@@ -56,92 +79,7 @@ export default function App() {
           <NoteList />
         </div>
       </main>
+      <Footer />
     </>
-  );
-}
-
-function Header() {
-  return (
-    <header>
-      <h1>TODO LIST</h1>
-    </header>
-  );
-}
-
-function TodoForm({ onAddItem }) {
-  const [todo, setTodo] = useState('');
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    // guard clause
-    if (!todo) return;
-    const newItem = { id: crypto.randomUUID(), todo, status: false };
-    onAddItem(newItem);
-    setTodo('');
-  }
-
-  return (
-    <form
-      className="form"
-      onSubmit={handleSubmit}
-    >
-      <input
-        type="text"
-        placeholder="Todo..."
-        value={todo}
-        onChange={(e) => setTodo(e.target.value)}
-      />
-      <button>+</button>
-    </form>
-  );
-}
-
-function TodoList({ todos, onToggleStatus, onDeleteItem, toggleStatus }) {
-  return (
-    <ul>
-      {todos.map((i) => (
-        <TodoItem
-          key={i.id}
-          item={i}
-          onToggleStatus={onToggleStatus}
-          onDeleteItem={onDeleteItem}
-          toggleStatus={toggleStatus}
-        ></TodoItem>
-      ))}
-    </ul>
-  );
-}
-
-function TodoItem({ item, onToggleStatus, onDeleteItem, toggleStatus }) {
-  const isWorking = toggleStatus?.id === item.id;
-  return (
-    <li>
-      {isWorking ? <p className="working-on">👉{item.todo}👈</p> : <p>{item.todo}</p>}
-      <button onClick={() => onToggleStatus(item)}>Working on it</button>
-      <button onClick={() => onDeleteItem(item)}>X</button>
-    </li>
-  );
-}
-
-// Re-use Form Component with children?
-function NotesForm({}) {
-  return (
-    <form action="">
-      <input
-        type="text"
-        placeholder="Notes..."
-      />
-      <button>+</button>
-    </form>
-  );
-}
-
-// Re-use List Component?
-function NoteList() {
-  return (
-    <ul>
-      <li>placeholder</li>
-    </ul>
   );
 }
