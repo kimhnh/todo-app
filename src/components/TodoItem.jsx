@@ -1,48 +1,29 @@
 import { useState } from 'react';
-import ButtonList from './ButtonList';
-import Button from './Button';
-import Input from './Input';
 
-export default function TodoItem({
-  item,
-  workingItem,
-  editItem,
-  onWorkingItem,
-  onDeleteItem,
-  onEditInput,
-  onUpdateItem,
-}) {
+export default function TodoItem({ children, editItem, workingItem, onUpdateItem, item }) {
   const isEditing = editItem?.id === item.id;
   const [editTodo, setEditTodo] = useState(''); // new input
 
-  function handleSubmit(e) {
+  function handleEditSubmit(e) {
     e.preventDefault();
     if (!editTodo) return;
 
     onUpdateItem(editTodo);
     setEditTodo('');
   }
-
   return (
     <li className={workingItem?.id === item.id ? 'working-on' : ''}>
       <p>{item.todo}</p>
-
       {isEditing && (
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleEditSubmit}>
           <Input
             value={editTodo}
             onChange={setEditTodo}
-          ></Input>
+          />
           <Button>+</Button>
-        </form>
+        </Form>
       )}
-
-      <ButtonList
-        item={item}
-        onWorkingItem={onWorkingItem}
-        onEditInput={onEditInput}
-        onDeleteItem={onDeleteItem}
-      />
+      {children}
     </li>
   );
 }

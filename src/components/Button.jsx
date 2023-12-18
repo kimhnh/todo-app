@@ -1,9 +1,8 @@
-// Re-usable Button Component
-export default function Button({ children, onAction }) {
+export default function Button({ children, onClick }) {
   return (
     <button
       className="button"
-      onClick={onAction}
+      onClick={onClick}
     >
       {children}
     </button>

@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import TodoForm from './components/TodoForm';
+import Container from './components/Container';
+import Box from './components/Box';
+import Form from './components/Form';
+import Input from './components/Input';
+import Button from './components/Button';
+import ButtonList from './components/ButtonList';
 import TodoList from './components/TodoList';
 import TodoItem from './components/TodoItem';
-import { NotesForm, NoteList } from './NotesForm'; // WIP
 
-// Dummy TODO List
-const todoList = [
+const tempTodoData = [
   { id: crypto.randomUUID(), todo: 'water plants', status: false },
   { id: crypto.randomUUID(), todo: 'make coffee', status: false },
   { id: crypto.randomUUID(), todo: 'buy ingredients for dinner', status: false },
 ];
 
-// Dummy Notes List
-const notesList = [
+const tempNotesData = [
   { id: 1, note: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Porro, deleniti.' },
   {
     id: 2,
@@ -24,8 +26,9 @@ const notesList = [
 ];
 
 export default function App() {
-  const [list, setList] = useState(todoList); // notes array
-  const [workingItem, setWorkingItem] = useState(null); // select working-on item
+  const [list, setList] = useState(tempTodoData);
+  const [todo, setTodo] = useState(''); // add new todo
+  const [workingItem, setWorkingItem] = useState(null); // select item
   const [editItem, setEditItem] = useState(null); // select editing item
 
   // Form Handler Functions
@@ -48,7 +51,6 @@ export default function App() {
 
   // [UPDATE_ ITEM] :: SELECT ITEM TO UPDATE
   function handleEditInput(item) {
-    // setShowInput((s) => !s);
     setEditItem((e) => (e?.id === item.id ? null : item));
   }
 
@@ -58,28 +60,59 @@ export default function App() {
     setWorkingItem((s) => s?.id === item.id && null);
   }
 
+  //form
+  function handleTodoSubmit(e) {
+    e.preventDefault();
+
+    // guard clause
+    if (!todo) return;
+    const newItem = { id: crypto.randomUUID(), todo, status: false };
+    handleAddItem(newItem);
+    setTodo('');
+  }
+
   return (
-    <div className="container">
+    <>
       <Header />
-      <main>
-        <div className="todo">
-          <TodoForm onAddItem={handleAddItem} />
-          <TodoList
-            todos={list}
-            workingItem={workingItem}
-            editItem={editItem}
-            onWorkingItem={handleWorkingItem}
-            onDeleteItem={handleDeleteItem}
-            onEditInput={handleEditInput}
-            onUpdateItem={handleUpdateItem}
-          />
-        </div>
-        {/* <div className="notes">
-          <NotesForm />
-          <NoteList />
-        </div> */}
-      </main>
+
+      <Container>
+        <Box>
+          <Form onSubmit={handleTodoSubmit}>
+            <Input
+              value={todo}
+              onChange={setTodo}
+            >
+              Add a new todo
+            </Input>
+            <Button>+</Button>
+          </Form>
+          <TodoList list={list}>
+            {list.map((i) => (
+              <TodoItem
+                key={i.id}
+                item={i}
+                workingItem={workingItem}
+                onUpdateItem={handleUpdateItem}
+              >
+                <ButtonList>
+                  <Button onClick={() => handleDeleteItem(i)}>❌</Button>
+                  <Button onClick={() => handleEditInput(i)}>✏️</Button>
+                  <Button onClick={() => handleWorkingItem(i)}>🎯</Button>
+                </ButtonList>
+              </TodoItem>
+            ))}
+          </TodoList>
+        </Box>
+
+        <Box>
+          <Form>
+            <Input>Add a new note</Input>
+            <Button>+</Button>
+          </Form>
+        </Box>
+      </Container>
+
       <Footer />
-    </div>
+    </>
   );
 }

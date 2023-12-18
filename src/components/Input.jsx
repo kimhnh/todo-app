@@ -1,4 +1,3 @@
-//Reusable Input Component
 export default function Input({ children, value, onChange }) {
   return (
     <input
