@@ -25,11 +25,14 @@ const tempNotesData = [
   { id: 3, note: 'Lorem ipsum dolor sit amet.' },
 ];
 
+/* TODO :: HIDE EDIT INPUT AFTER SUBMIT */
+
 export default function App() {
   const [list, setList] = useState(tempTodoData);
-  const [todo, setTodo] = useState(''); // add new todo
-  const [workingItem, setWorkingItem] = useState(null); // select item
+  const [workingItem, setWorkingItem] = useState(null); // highlight working item
   const [editItem, setEditItem] = useState(null); // select editing item
+
+  const [todo, setTodo] = useState(''); // add new todo
 
   // Form Handler Functions
   // [UPDATE_ ARRAY] :: SPREAD
@@ -51,6 +54,7 @@ export default function App() {
 
   // [UPDATE_ ITEM] :: SELECT ITEM TO UPDATE
   function handleEditInput(item) {
+    // setShowInput((s) => !s);
     setEditItem((e) => (e?.id === item.id ? null : item));
   }
 
@@ -60,11 +64,9 @@ export default function App() {
     setWorkingItem((s) => s?.id === item.id && null);
   }
 
-  //form
   function handleTodoSubmit(e) {
     e.preventDefault();
 
-    // guard clause
     if (!todo) return;
     const newItem = { id: crypto.randomUUID(), todo, status: false };
     handleAddItem(newItem);
@@ -91,6 +93,7 @@ export default function App() {
               <TodoItem
                 key={i.id}
                 item={i}
+                editItem={editItem}
                 workingItem={workingItem}
                 onUpdateItem={handleUpdateItem}
               >
