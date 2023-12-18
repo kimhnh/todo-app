@@ -20,12 +20,12 @@ export default function TodoForm({ onAddItem }) {
       className="form"
       onSubmit={handleSubmit}
     >
-      <h3>My TODOs</h3>
+      {/* <span>My TODOs</span> */}
       <Input
         value={todo}
         onChange={setTodo}
       >
-        Todo...
+        Write a todo...
       </Input>
       <Button>+</Button>
     </form>

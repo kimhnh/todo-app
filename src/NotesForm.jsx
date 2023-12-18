@@ -3,8 +3,8 @@ import Input from './components/Input';
 // WIP WIP WIP ///////////////////////////////////
 export function NotesForm({}) {
   return (
-    <form action="">
-      <h3>My Notes (WIP)</h3>
+    <form className="form">
+      <span>My Notes (WIP)</span>
       <Input>Notes...</Input>
       <button>+</button>
     </form>

@@ -8,9 +8,9 @@ import { NotesForm, NoteList } from './NotesForm'; // WIP
 
 // Dummy TODO List
 const todoList = [
-  { id: 1, todo: 'water plants', status: false },
-  { id: 2, todo: 'make coffee', status: false },
-  { id: 3, todo: 'buy ingredients for dinner', status: false },
+  { id: crypto.randomUUID(), todo: 'water plants', status: false },
+  { id: crypto.randomUUID(), todo: 'make coffee', status: false },
+  { id: crypto.randomUUID(), todo: 'buy ingredients for dinner', status: false },
 ];
 
 // Dummy Notes List
@@ -59,10 +59,10 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="container">
       <Header />
       <main>
-        <div className="todo-list">
+        <div className="todo">
           <TodoForm onAddItem={handleAddItem} />
           <TodoList
             todos={list}
@@ -74,12 +74,12 @@ export default function App() {
             onUpdateItem={handleUpdateItem}
           />
         </div>
-        <div className="notes">
+        {/* <div className="notes">
           <NotesForm />
           <NoteList />
-        </div>
+        </div> */}
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

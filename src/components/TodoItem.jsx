@@ -24,12 +24,8 @@ export default function TodoItem({
   }
 
   return (
-    <li>
-      {workingItem?.id === item.id ? (
-        <p className="working-on">👉{item.todo}👈</p>
-      ) : (
-        <p>{item.todo}</p>
-      )}
+    <li className={workingItem?.id === item.id ? 'working-on' : ''}>
+      <p>{item.todo}</p>
 
       {isEditing && (
         <form onSubmit={handleSubmit}>
