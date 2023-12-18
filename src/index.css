@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap');
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,50 +6,30 @@
 
 body {
   background-color: #27272a;
+  color: white;
   font-family: Arial, Helvetica, sans-serif;
-  height: 100vh;
-  padding: 3rem;
-}
 
-.container {
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
 header,
 footer {
-  color: white;
   text-align: center;
 }
 
-.todo {
-  display: block;
-  width: 30rem;
-  height: 40rem;
-  background-color: #d1d5db;
+.container {
+  display: inline-flex;
+}
+
+.box {
   border-radius: 1rem;
-  margin: 2rem;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #e5e7eb;
-  padding: 1rem;
-  margin: 1rem 0;
-  list-style-type: none;
-}
-
-.working-on {
-  background-color: #34d399;
-}
-
-.button-list {
-  display: flex;
-  flex-direction: row-reverse;
+  background-color: rgb(167, 77, 77);
+  padding: 2rem;
+  margin: 1rem;
+  width: 30rem;
 }
 
 .form > input,
@@ -63,19 +41,32 @@ button {
 }
 
 .form > input {
-  border-radius: 1rem 0 0 0;
   width: 90%;
 }
 
 .form > button {
-  border-radius: 0 1rem 0 0;
   width: 10%;
 }
 
-.button-list button {
-  margin: 0.2rem;
+.todo-list {
+  margin-top: 1rem;
 }
 
-button {
-  background-color: #c4c6ca;
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(205, 116, 116);
+  padding: 1rem;
+  margin: 1rem 0;
+  list-style-type: none;
+}
+
+.working-on {
+  background-color: rgb(139, 60, 60);
+}
+
+.button-list {
+  display: flex;
+  flex-direction: row-reverse;
 }
