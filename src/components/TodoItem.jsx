@@ -3,20 +3,28 @@ import Form from './Form';
 import Input from './Input';
 import Button from './Button';
 
-export default function TodoItem({ children, editItem, workingItem, onUpdateItem, item }) {
-  const isEditing = editItem?.id === item.id;
-  const [editTodo, setEditTodo] = useState(''); // new input
+export default function TodoItem({
+  children,
+  item,
+  isWorking,
+  showInput,
+  setShowInput,
+  onUpdateItem,
+}) {
+  const [editTodo, setEditTodo] = useState(''); // update a todo
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!editTodo) return;
     onUpdateItem(editTodo);
+    setEditTodo('');
+    setShowInput(null);
   }
 
   return (
-    <li className={workingItem?.id === item.id ? 'working-on' : ''}>
+    <li className={isWorking ? 'working-on' : ''}>
       <p>{item.todo}</p>
-      {isEditing && (
+      {showInput?.id === item.id && (
         <Form onSubmit={handleSubmit}>
           <Input
             value={editTodo}

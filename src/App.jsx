@@ -11,9 +11,9 @@ import TodoList from './components/TodoList';
 import TodoItem from './components/TodoItem';
 
 const tempTodoData = [
-  { id: crypto.randomUUID(), todo: 'water plants', status: false },
-  { id: crypto.randomUUID(), todo: 'make coffee', status: false },
-  { id: crypto.randomUUID(), todo: 'buy ingredients for dinner', status: false },
+  { id: crypto.randomUUID(), todo: 'water plants', isWorking: false },
+  { id: crypto.randomUUID(), todo: 'make coffee', isWorking: false },
+  { id: crypto.randomUUID(), todo: 'buy ingredients for dinner', isWorking: false },
 ];
 
 const tempNotesData = [
@@ -25,52 +25,43 @@ const tempNotesData = [
   { id: 3, note: 'Lorem ipsum dolor sit amet.' },
 ];
 
-/* TODO :: HIDE EDIT INPUT AFTER SUBMIT */
-
 export default function App() {
+  // State
   const [list, setList] = useState(tempTodoData);
-  const [workingItem, setWorkingItem] = useState(null); // highlight working item
-  const [editItem, setEditItem] = useState(null); // select editing item
-
   const [todo, setTodo] = useState(''); // add new todo
+  const [showInput, setShowInput] = useState(null);
 
-  // Form Handler Functions
-  // [UPDATE_ ARRAY] :: SPREAD
+  // Update (Add)
   function handleAddItem(item) {
     setList((list) => [...list, item]);
   }
 
-  // [UPDATE_ ITEM (TODO)] :: MAP + SPREAD
-  function handleUpdateItem(editTodo) {
-    setList((list) => list.map((i) => (i.id === editItem.id ? { ...i, todo: editTodo } : i)));
-  }
-
-  // Button Handler Functions
-  // [UPDATE_ ITEM (STATUS)] :: MAP + SREAD
-  function handleWorkingItem(item) {
-    setList((list) => list.map((i) => (i.id === item.id ? { ...i, status: !i.status } : i)));
-    setWorkingItem((s) => (s?.id === item.id ? null : item));
-  }
-
-  // [UPDATE_ ITEM] :: SELECT ITEM TO UPDATE
-  function handleEditInput(item) {
-    // setShowInput((s) => !s);
-    setEditItem((e) => (e?.id === item.id ? null : item));
-  }
-
-  // [DELETE_ ITEM] :: FILTER
-  function handleDeleteItem(item) {
-    setList((list) => list.filter((i) => item.id !== i.id));
-    setWorkingItem((s) => s?.id === item.id && null);
-  }
-
-  function handleTodoSubmit(e) {
+  function handleNewSubmit(e) {
     e.preventDefault();
 
     if (!todo) return;
-    const newItem = { id: crypto.randomUUID(), todo, status: false };
+    const newItem = { id: crypto.randomUUID(), todo, isWorking: false };
     handleAddItem(newItem);
     setTodo('');
+  }
+
+  // Update (Edit)
+  function handleUpdateItem(editTodo) {
+    setList((list) => list.map((i) => (i.id === showInput.id ? { ...i, todo: editTodo } : i)));
+  }
+
+  function handleShowInput(item) {
+    setShowInput((s) => (s?.id === item.id ? null : item));
+  }
+
+  // Toggle isWorking
+  function handleIsWorking(item) {
+    setList((list) => list.map((i) => (i.id === item.id ? { ...i, isWorking: !i.isWorking } : i)));
+  }
+
+  // Delete
+  function handleDeleteItem(item) {
+    setList((list) => list.filter((i) => item.id !== i.id));
   }
 
   return (
@@ -79,7 +70,7 @@ export default function App() {
 
       <Container>
         <Box>
-          <Form onSubmit={handleTodoSubmit}>
+          <Form onSubmit={handleNewSubmit}>
             <Input
               value={todo}
               onChange={setTodo}
@@ -93,14 +84,15 @@ export default function App() {
               <TodoItem
                 key={i.id}
                 item={i}
-                editItem={editItem}
-                workingItem={workingItem}
+                isWorking={i.isWorking}
+                showInput={showInput}
+                setShowInput={setShowInput}
                 onUpdateItem={handleUpdateItem}
               >
                 <ButtonList>
                   <Button onClick={() => handleDeleteItem(i)}>❌</Button>
-                  <Button onClick={() => handleEditInput(i)}>✏️</Button>
-                  <Button onClick={() => handleWorkingItem(i)}>🎯</Button>
+                  <Button onClick={() => handleShowInput(i)}>✏️</Button>
+                  <Button onClick={() => handleIsWorking(i)}>🎯</Button>
                 </ButtonList>
               </TodoItem>
             ))}
